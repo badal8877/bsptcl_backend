@@ -6,7 +6,7 @@ export const createTender = async (req, res) => {
 
         const newTender = new TenderUpload({
             HeadLine,
-            Alias_Name1,
+            Alias_Name1: req.file.path,  // Store the file path from Alias_Name1,
             Alias_Name2,
             Alias_Name3,
             Publishing_Date,

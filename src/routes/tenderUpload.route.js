@@ -7,7 +7,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router()
 
 // Route to handle tender upload (only for authenticated users)
-router.post('/upload', verifyJWT, upload.single('file'), createTender);
+router.post('/upload', verifyJWT, upload.single('Alias_Name1'), createTender);
 
 
 
