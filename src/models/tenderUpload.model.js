@@ -6,6 +6,10 @@ const tenderUploadSchema = new Schema({
         type: String,
         required: true
     },
+    Description:{
+        type: String,
+        required: true
+    },
     Alias_Name1: {
         type: String,
         required: true
@@ -26,6 +30,11 @@ const tenderUploadSchema = new Schema({
     Closing_Date: {
         type: Date,
         required: true
+    },
+    status: {
+        type: String,
+        enum: ['active', 'cancelled', 'archived'], // Enum to manage the tender status
+        default: 'active'
     }
 });
 
