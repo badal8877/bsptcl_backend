@@ -33,7 +33,8 @@ const tenderUploadSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['active', 'cancelled', 'archived'], // Enum to manage the tender status
+        // Enum to manage the tender status
+        enum: ['active', 'cancelled', 'archived'], 
         default: 'active'
     }
 });

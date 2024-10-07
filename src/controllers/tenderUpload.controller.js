@@ -2,7 +2,7 @@ import { TenderUpload } from '../models/tenderUpload.model.js';
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
-// import {cron} from 'node-cron';
+import mongoose from "mongoose";
 
 const createTender = asyncHandler(async (req, res) => {
     const { HeadLine, Description, Alias_Name2, Alias_Name3, Publishing_Date, Closing_Date } = req.body;
@@ -91,10 +91,68 @@ const archiveTenders = asyncHandler(async (req, res) => {
     }
 });
 
+// Update a tender
+const updateTender = asyncHandler(async (req, res) => {
+    const tenderId = req.params.id;
+    const { HeadLine, Description, Alias_Name2, Alias_Name3, Publishing_Date, Closing_Date } = req.body;
+    if ([HeadLine, Description, Publishing_Date, Closing_Date].some((field) => field?.trim() === "")) {
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const tender = await TenderUpload.findById(tenderId);
+    if (!tender) {
+        throw new ApiError(404, "Tender not found");
+    }
+
+    tender.HeadLine = HeadLine;
+    tender.Description = Description;
+    tender.Alias_Name2 = Alias_Name2;
+    tender.Alias_Name3 = Alias_Name3;
+    tender.Publishing_Date = Publishing_Date;
+    tender.Closing_Date = Closing_Date;
+
+    if (req.file) {
+        tender.Alias_Name1 = req.file.path;
+    }
+
+    await tender.save();
+    return res.status(200).json(new ApiResponse(200, tender, "Tender updated successfully"));
+});
+
+// Delete a tender
+// const deleteTender = asyncHandler(async (req, res) => {
+//     const tenderId = req.params.id;
+//     const tender = await TenderUpload.findById(tenderId);
+//     if (!tender) {
+//         throw new ApiError(404, "Tender not found");
+//     }
+//     await tender.remove();
+//     return res.status(200).json(new ApiResponse(200, {}, "Tender deleted successfully"));
+// });
+const deleteTender = asyncHandler(async (req, res) => {
+    const tenderId = req.params.id;
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(tenderId)) {
+        throw new ApiError(400, "Invalid Tender ID");
+    }
+
+    // Find and delete the tender by ID
+    const tender = await TenderUpload.findByIdAndDelete(tenderId);
+
+    if (!tender) {
+        throw new ApiError(404, "Tender not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, {}, "Tender deleted successfully"));
+});
+
 // Export at the end of the file
 export { 
     createTender,
     cancelTender,
-    archiveTenders
+    archiveTenders,
+    updateTender,
+    deleteTender
 
  };
