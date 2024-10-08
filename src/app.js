@@ -1,8 +1,7 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import cron from "node-cron"
-import { archiveTenders } from "./controllers/tenderUpload.controller.js"
+import { startArchiveTendersJob } from "./controllers/tenderUpload.controller.js"
 
 const app = express()
 
@@ -11,12 +10,8 @@ app.use(cors({
     credentials: true
 }))
 
-// Schedule the task to run every day at midnight (00:00)
-cron.schedule('0 0 * * *', () => {
-    console.log('Running archiveExpiredTenders job at midnight...');
-    archiveTenders();
-});
-
+// Start the cron job for archiving tenders
+startArchiveTendersJob();
 
 app.use(express.json({limit: "1mb"}))
 app.use(express.urlencoded({extended: true, limit: "1mb"}))
@@ -32,6 +27,7 @@ import tenderRoute from './routes/tenderUpload.route.js'
 //routes declaration
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/tender", tenderRoute)
+
 
 
 // http://localhost:8000/api/v1/users/register

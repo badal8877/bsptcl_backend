@@ -20,6 +20,6 @@ router.patch('/cancel/:id', verifyJWT, cancelTender);
 router.delete('/delete/:id', deleteTender);
 
 // Route to handle archiving a tender (only for authenticated users)
-router.put('/archive', verifyJWT, archiveTenders);
+// router.put('/archive', verifyJWT, archiveTenders);
 
 export default router
