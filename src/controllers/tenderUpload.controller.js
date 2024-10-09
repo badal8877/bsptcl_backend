@@ -3,7 +3,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose from "mongoose";
-import { CronJob } from 'cron';
 
 const createTender = asyncHandler(async (req, res) => {
     const { HeadLine, Description, Alias_Name2, Alias_Name3, Publishing_Date, Closing_Date } = req.body;
@@ -63,17 +62,17 @@ const cancelTender = asyncHandler(async (req, res) => {
     );
 });
 
+// Manually trigger archiving of expired tenders
+const archiveTenders = asyncHandler(async (req, res) => {
+    console.log("Manually triggered archive tender call");
 
-// Automatically archive expired tenders (where Closing_Date is in the past).
-const archiveTenders = asyncHandler(async () => {
     try {
         const currentDate = new Date();
         console.log('Current Date:', currentDate);
 
-        // Find all tenders whose status is 'active' and Closing_Date is before now
         const expiredTenders = await TenderUpload.find({
             status: 'active',
-            Closing_Date: { $lt: currentDate }  // Ensure Closing_Date is earlier than current date
+            Closing_Date: { $lt: currentDate }
         });
 
         console.log('Expired Tenders:', expiredTenders);
@@ -81,31 +80,19 @@ const archiveTenders = asyncHandler(async () => {
         if (expiredTenders.length > 0) {
             for (const tender of expiredTenders) {
                 console.log(`Archiving Tender with ID: ${tender._id}, Status before: ${tender.status}`);
-                tender.status = 'archived'; // Update status to 'archived'
+                tender.status = 'archived';
                 await tender.save();
                 console.log(`Status after: ${tender.status}`);
             }
-            console.log(`${expiredTenders.length} tenders archived automatically.`);
+            res.status(200).json({ message: `${expiredTenders.length} tenders archived successfully.` });
         } else {
-            console.log("No expired tenders to archive.");
+            res.status(200).json({ message: "No expired tenders to archive." });
         }
     } catch (error) {
         console.error('Error while archiving tenders:', error);
+        res.status(500).json({ message: "Error while archiving tenders." });
     }
 });
-
-
-// Schedule the job to run every day at midnight (00:00)
-const startArchiveTendersJob = () => {
-    const job = new CronJob('0 0 * * *', () => {
-        console.log('Running archiveExpiredTenders job at midnight...');
-        archiveTenders();  // Call the function to archive expired tenders
-    });
-
-    // Start the cron job
-    job.start();
-    console.log("Cron job for archiving tenders has been started.");
-};
 
 
 // Update a tender
@@ -154,14 +141,27 @@ const deleteTender = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, {}, "Tender deleted successfully"));
 });
+// Get all tenders
+const getAllTenders = asyncHandler(async (req, res) => {
+    // Fetch all tenders
+    const tenders = await TenderUpload.find({});
+
+    // Check if tenders are found
+    if (!tenders || tenders.length === 0) {
+        throw new ApiError(404, "No tenders found");
+    }
+
+    // Return tenders in the response
+    return res.status(200).json(new ApiResponse(200, tenders, "Tenders fetched successfully"));
+});
 
 // Export at the end of the file
-export { 
+export {
     createTender,
     cancelTender,
     archiveTenders,
-    startArchiveTendersJob,
     updateTender,
-    deleteTender
+    deleteTender,
+    getAllTenders
 
- };
+};

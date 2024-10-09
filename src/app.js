@@ -1,7 +1,7 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
-import { startArchiveTendersJob } from "./controllers/tenderUpload.controller.js"
+
 
 const app = express()
 
@@ -10,8 +10,6 @@ app.use(cors({
     credentials: true
 }))
 
-// Start the cron job for archiving tenders
-startArchiveTendersJob();
 
 app.use(express.json({limit: "1mb"}))
 app.use(express.urlencoded({extended: true, limit: "1mb"}))
