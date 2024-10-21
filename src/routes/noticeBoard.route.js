@@ -6,8 +6,9 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
-// Route to handle tender upload (only for authenticated users)
+// Route to handle Notice upload (only for authenticated users)
 router.post('/create', verifyJWT, upload.single('Document'), createNotice);
 router.delete('/delete/:id', verifyJWT , deleteNotice);
 
 export default router
+

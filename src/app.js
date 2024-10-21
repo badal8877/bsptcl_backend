@@ -21,10 +21,12 @@ app.use(cookieParser())
 import userRouter from './routes/user.routes.js'
 import tenderRoute from './routes/tenderUpload.route.js'  
 import noticeRoute from './routes/noticeBoard.route.js'
+import CircularRoute from './routes/circularNotification.route.js'
 //routes declaration
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/tender", tenderRoute)
 app.use("/api/v1/notice", noticeRoute)
+app.use("api/v1/circular",CircularRoute)
 
 
 
