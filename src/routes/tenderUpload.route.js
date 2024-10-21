@@ -10,18 +10,18 @@ const router = Router()
 router.post('/upload', verifyJWT, upload.single('Alias_Name1'), createTender);
 
 // Route to update an existing tender (with optional file upload)
-router.put('/update/:id', upload.single('Alias_Name1'), updateTender);
+router.put('/update/:id',verifyJWT, upload.single('Alias_Name1'), updateTender);
 
 // Route to manually trigger archiving of expired tenders
-router.post('/archiveExpireTenders', archiveTenders);
+router.post('/archiveExpireTenders', verifyJWT, archiveTenders);
 
 // Route to handle cancelling a tender (only for authenticated users)
 router.patch('/cancel/:id', verifyJWT, cancelTender);
 
 //Route to delete an existing tender 
-router.delete('/delete/:id', deleteTender);
+router.delete('/delete/:id', verifyJWT, deleteTender);
 
 // Route to get all tenders
-router.get('/getAll', getAllTenders);
+router.get('/getAll', verifyJWT, getAllTenders);
 
 export default router

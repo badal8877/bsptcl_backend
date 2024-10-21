@@ -20,11 +20,11 @@ app.use(cookieParser())
 //routes import
 import userRouter from './routes/user.routes.js'
 import tenderRoute from './routes/tenderUpload.route.js'  
-
-
+import noticeRoute from './routes/noticeBoard.route.js'
 //routes declaration
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/tender", tenderRoute)
+app.use("/api/v1/notice", noticeRoute)
 
 
 

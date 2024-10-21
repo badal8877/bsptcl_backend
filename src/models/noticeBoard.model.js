@@ -20,6 +20,7 @@ const noticeBoardSchema = new Schema ({
     Publishing_Date: {
         type: Date,
         default: Date.now,
+        required: true
     }
 });
 
