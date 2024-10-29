@@ -155,6 +155,44 @@ const getAllTenders = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, tenders, "Tenders fetched successfully"));
 });
 
+//get active tender 
+const getActiveTenders = asyncHandler(async (req, res) => {
+    //Fetch all active tender 
+    const activeTenders = await TenderUpload.find({ status: 'active' });
+
+    //check if tenders are found 
+    if (activeTenders.length === 0) {
+        throw new ApiError(404, "No active tenders found");
+    }
+    // Return tenders in the response
+    return res.status(200).json(new ApiResponse(200, activeTenders, "Active tenders fetched successfully"));
+});
+
+//get cancelled  tender 
+const getCancelledTenders = asyncHandler(async (req, res) => {
+    //Fetch all active tender 
+    const cancelledTenders = await TenderUpload.find({ status: 'cancelled' });
+
+    //check if tenders are found 
+    if (cancelledTenders.length === 0)
+        throw new ApiError(404, "No cancelled tenders found");
+    // Return tenders in the response
+    return res.status(200).json(new ApiResponse(200, cancelledTenders, "Cancelled tenders fetched successfully"));
+});
+
+//get archive tender 
+const getArchivedTenders = asyncHandler(async (req, res) => {
+    //Fetch all active tender 
+    const archivedTenders = await TenderUpload.find({ status: 'archived' });
+
+    //check if tenders are found 
+    if (archivedTenders.length === 0)
+        throw new ApiError(404, "No archived tenders found");
+    // Return tenders in the response
+    return res.status(200).json(new ApiResponse(200, archivedTenders, "Archived tenders fetched successfully"));
+});
+
+
 // Export at the end of the file
 export {
     createTender,
@@ -162,6 +200,9 @@ export {
     archiveTenders,
     updateTender,
     deleteTender,
-    getAllTenders
+    getAllTenders,
+    getActiveTenders,
+    getCancelledTenders,
+    getArchivedTenders
 
 };
