@@ -10,7 +10,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router()
 
 // Route to handle tender upload (only for authenticated users)
-router.post('/upload', verifyJWT, upload.single('Alias_Name1'), createTender);
+router.post('/create', verifyJWT, upload.single('Alias_Name1'), createTender);
 
 // Route to update an existing tender (with optional file upload)
 router.put('/update/:id', verifyJWT, upload.single('Alias_Name1'), updateTender);
@@ -34,5 +34,5 @@ router.get('/active', getActiveTenders);
 router.get('/cancelled', getCancelledTenders);
 
 //Route to get archive tenders 
-router.get('/archive', getArchivedTenders);
+router.get('/archived', getArchivedTenders);
 export default router
