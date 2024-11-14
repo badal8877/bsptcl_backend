@@ -66,9 +66,24 @@ const deleteCircularNotice = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, {}, "Circular Notice deleted successfully"));
 });
 
+// Get all officeOrder
+const getCircularNotification = asyncHandler(async (req, res) => {
+    // Fetch all officeOrder
+    const getCircularNotifications = await CircularNotification.find({});
+
+    // Check if OfficeOrder are found
+    if (!getCircularNotifications || getCircularNotifications.length === 0) {
+        throw new ApiError(404, "No getCircularNotifications found");
+    }
+
+    // Return officeOrder in the response
+    return res.status(200).json(new ApiResponse(200, getCircularNotifications, "getCircularNotifications fetched successfully"));
+});
+
 
 // Use  export 
 export {
     createCircularNotice,
-    deleteCircularNotice
+    deleteCircularNotice,
+    getCircularNotification
 };

@@ -17,6 +17,11 @@ const officeOrderSchema = new Schema({
         type: String,
         required: true
     },
+    Publishing_Date: {
+        type: Date,
+        default: Date.now,
+        required: true
+    },
     Document: {
         type: String,
         required: true
